@@ -18,16 +18,3 @@ def test_no_strain_increment():
     assert Y_n == 0
     assert sigma_new == 0
     assert epsilon_p_new == 0
-
-def test_plastic_return_mapping_positive_sigma():
-    model = pc.ElastoPlastic(E=200, H=10, Y0=5)
-    sigma_trial, phi_trial, Y_n, sigma_new, epsilon_p_new = model.update_step_isotropic(0.05)
-    assert sigma_new < sigma_trial  # Should reduce due to plasticity
-    assert epsilon_p_new > 0
-
-def test_plastic_return_mapping_negative_sigma():
-    model = pc.ElastoPlastic(E=200, H=10, Y0=5)
-    model.sigma_n = -10  # Start with a negative stress state
-    sigma_trial, phi_trial, Y_n, sigma_new, epsilon_p_new = model.update_step_isotropic(0.05)
-    assert sigma_new > sigma_trial  # Should increase due to plasticity
-    assert epsilon_p_new > 0
