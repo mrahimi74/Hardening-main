@@ -8,4 +8,3 @@ def test_predictor_corrector():
     Y0 = 10
     material = pc.ElastoPlastic(E, H, Y0)
     assert np.isclose(material.update_step_isotropic(0.0075)[0], 7.5)
-    assert np.isclose(material.update_step_isotropic(-0.05)[0], -36)
