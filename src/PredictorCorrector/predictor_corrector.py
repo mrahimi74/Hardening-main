@@ -1,3 +1,5 @@
+import numpy as np
+
 class ElastoPlastic:
     def __init__(self, E, H, Y0):
         
