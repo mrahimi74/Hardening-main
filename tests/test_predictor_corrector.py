@@ -49,3 +49,8 @@ def test_update_step_kinematic_plastic():
     alpha_trial, eta_trial, phi_trial, sigma_new, epsilon_p_new, alpha_new = model.update_step_kinematic(delta_epsilon) 
     assert phi_trial > 0, "Expected phi_trial to be positive, indicating plastic behavior."
     assert sigma_new < model.sigma_n + model.E * delta_epsilon, "Stress should be reduced due to yielding."
+
+def test_zero_strain_kinematic():
+    model = pc.ElastoPlastic(E=200e9, H=10e9, Y0=250e6)
+    alpha_trial, eta_trial, phi_trial, sigma_new, epsilon_p_new, alpha_new = model.update_step_kinematic(0)
+    assert phi_trial == 0
