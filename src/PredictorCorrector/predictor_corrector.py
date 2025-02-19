@@ -78,3 +78,4 @@ class ElastoPlastic:
 
         # Return results for this step
         return alpha_trial, eta_trial, phi_trial, sigma_new, epsilon_p_new, alpha_new
+    
