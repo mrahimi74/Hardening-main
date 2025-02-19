@@ -6,7 +6,7 @@ import pytest
 import numpy as np
 
 def test_initialization():
-    model = ElastoPlastic(E=200e9, H=10e9, Y0=250e6)
+    model = pc.ElastoPlastic(E=200e9, H=10e9, Y0=250e6)
     assert model.E == 200e9
     assert model.H == 10e9
     assert model.Y0 == 250e6
