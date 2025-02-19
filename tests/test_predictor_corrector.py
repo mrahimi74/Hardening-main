@@ -18,3 +18,10 @@ def test_no_strain_increment():
     assert Y_n == 0
     assert sigma_new == 0
     assert epsilon_p_new == 0
+
+def sfsgfsg():
+    model = pc.ElastoPlastic(1000, 111.1, 10)
+    sigma_trial, phi_trial, Y_n, sigma_new, epsilon_p_new = model.update_step_isotropic(0.0225)
+    assert phi_trial > 0
+    assert sigma_trial > sigma_new
+    assert np.isclose(epsilon_p_new, .011250112501125013)
