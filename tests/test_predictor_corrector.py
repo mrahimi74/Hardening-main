@@ -33,3 +33,19 @@ def test_zero_strain():
     sigma_trial, phi_trial, Y_n, sigma_new, epsilon_p_new = model.update_step_isotropic(0)
     assert sigma_new == 0
     assert epsilon_p_new == 0
+
+def test_update_step_kinematic_elastic():
+    model = pc.ElastoPlastic(E=200e9, H=10e9, Y0=250e6)
+    delta_epsilon = 1e-6  # Small strain increment
+    alpha_trial, eta_trial, phi_trial, sigma_new, epsilon_p_new, alpha_new = model.update_step_kinematic(delta_epsilon)
+    assert phi_trial <= 0  # Elastic condition met
+    assert sigma_new == pytest.approx(model.sigma_n)  # Stress should match the trial stress
+    assert epsilon_p_new == model.epsilon_p_n  # No plastic strain change
+    assert alpha_new == model.alpha_n  # No change in backstress
+
+def test_update_step_kinematic_plastic():
+    model = pc.ElastoPlastic(E=200e9, H=10e9, Y0=250e6)
+    delta_epsilon = 5e-3  # Large strain increment
+    alpha_trial, eta_trial, phi_trial, sigma_new, epsilon_p_new, alpha_new = model.update_step_kinematic(delta_epsilon) 
+    assert phi_trial > 0, "Expected phi_trial to be positive, indicating plastic behavior."
+    assert sigma_new < model.sigma_n + model.E * delta_epsilon, "Stress should be reduced due to yielding."
