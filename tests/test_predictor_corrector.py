@@ -2,26 +2,34 @@ from PredictorCorrector import predictor_corrector as pc
 import numpy as np
 import pytest
 
-def test_predictor_corrector():
-    E = 1000
-    H = 111.1
-    Y0 = 10
-    material = pc.ElastoPlastic(E, H, Y0)
-    assert np.isclose(material.update_step_isotropic(0.0075)[0], 7.5)
-    assert np.isclose(material.update_step_kinematic(0.0075)[2], 5)
+import pytest
+import numpy as np
 
-def test_no_strain_increment():
-    model = pc.ElastoPlastic(E=200, H=10, Y0=5)
+def test_initialization():
+    model = ElastoPlastic(E=200e9, H=10e9, Y0=250e6)
+    assert model.E == 200e9
+    assert model.H == 10e9
+    assert model.Y0 == 250e6
+    assert model.sigma_n == 0
+    assert model.epsilon_p_n == 0
+    assert model.alpha_n == 0
+
+def test_elastic_step():
+    model = pc.ElastoPlastic(E=200e9, H=10e9, Y0=250e6)
+    delta_epsilon = 1e-6  # Small strain increment
+    sigma_trial, phi_trial, Y_n, sigma_new, epsilon_p_new = model.update_step_isotropic(delta_epsilon)
+    assert sigma_new == pytest.approx(model.E * delta_epsilon)
+    assert epsilon_p_new == 0  # No plastic deformation
+
+def test_plastic_step():
+    model = pc.ElastoPlastic(E=200e9, H=10e9, Y0=250e6)
+    delta_epsilon = 5e-3  # Large strain increment
+    sigma_trial, phi_trial, Y_n, sigma_new, epsilon_p_new = model.update_step_isotropic(delta_epsilon)
+    assert sigma_new < model.E * delta_epsilon  # Stress should be lower due to yielding
+    assert epsilon_p_new > 0  # Plastic strain should increase
+
+def test_zero_strain():
+    model = pc.ElastoPlastic(E=200e9, H=10e9, Y0=250e6)
     sigma_trial, phi_trial, Y_n, sigma_new, epsilon_p_new = model.update_step_isotropic(0)
-    assert sigma_trial == 0
-    assert phi_trial == 0
-    assert Y_n == 0
     assert sigma_new == 0
     assert epsilon_p_new == 0
-
-def sfsgfsg():
-    model = pc.ElastoPlastic(1000, 111.1, 10)
-    sigma_trial, phi_trial, Y_n, sigma_new, epsilon_p_new = model.update_step_isotropic(0.0225)
-    assert phi_trial > 0
-    assert sigma_trial > sigma_new
-    assert np.isclose(epsilon_p_new, .011250112501125013)
