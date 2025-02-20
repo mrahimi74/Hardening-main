@@ -29,7 +29,7 @@ python predictor_corrector.py
 ## 🧪 Testing
 Run tests using `pytest`:
 ```bash
-pytest --cov=predictor_corrector
+pytest --cov=PredictorCorrector
 ```
 
 ## 🛠 Dependencies
